@@ -21,13 +21,18 @@
                       }
                     }
                   });
-        var medication = smart.patient.api.fetchAll({
+
+         var medication = smart.patient.api.fetchAll({
           type: 'MedicationOrder'
         });
 
         $.when(pt, obv, medication).fail(onError);
 
         $.when(pt, obv, medication).done(function(patient, obv, medication) {
+          console.log('Patient data:', patient);
+          console.log('Observation data:', obv);
+          console.log('Medication data:', medication);
+          
           var byCodes = smart.byCodes(obv, 'code');
           var gender = patient.gender;
 
@@ -63,15 +68,13 @@
           p.hdl = getQuantityValueAndUnit(hdl[0]);
           p.ldl = getQuantityValueAndUnit(ldl[0]);
 
-          
-//Medications lists
+          //Medications
           var medications = medication.map(function(med) {
             return med.medicationCodeableConcept.text;
           });
           console.log('Medications:', medications);
           p.medications = medications.join(', ');
           console.log('Final patient data:', p);
-
           ret.resolve(p);
         });
       } else {
