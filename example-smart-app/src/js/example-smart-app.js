@@ -21,6 +21,9 @@
                       }
                     }
                   });
+        var medication = smart.patient.api.fetchAll({
+          type: 'MedicationOrder'
+        });
 
         $.when(pt, obv).fail(onError);
 
@@ -60,6 +63,11 @@
           p.hdl = getQuantityValueAndUnit(hdl[0]);
           p.ldl = getQuantityValueAndUnit(ldl[0]);
 
+          var medications = medication.map(function(med) {
+            return med.medicationCodeableConcept.text;
+          });
+          p.medications = medications.join(', ');
+
           ret.resolve(p);
         });
       } else {
@@ -83,6 +91,7 @@
       diastolicbp: {value: ''},
       ldl: {value: ''},
       hdl: {value: ''},
+      medications: {value: ''}
     };
   }
 
@@ -126,6 +135,7 @@
     $('#diastolicbp').html(p.diastolicbp);
     $('#ldl').html(p.ldl);
     $('#hdl').html(p.hdl);
+    $('#medicationList').html(p.medications);
   };
 
 })(window);
